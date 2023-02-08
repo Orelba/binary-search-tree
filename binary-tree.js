@@ -88,6 +88,36 @@ class Tree {
     if (!callbackFn) return levelOrderList
   }
 
+  inorder(callbackFn, root = this.root, list = []) {
+    if (root === null) return root
+
+    this.inorder(callbackFn, root.left, list)
+    callbackFn ? callbackFn(root) : list.push(root.key)
+    this.inorder(callbackFn, root.right, list)
+
+    if (!callbackFn) return list
+  }
+
+  preorder(callbackFn, root = this.root, list = []) {
+    if (root === null) return root
+
+    callbackFn ? callbackFn(root) : list.push(root.key)
+    this.preorder(callbackFn, root.left, list)
+    this.preorder(callbackFn, root.right, list)
+
+    if (!callbackFn) return list
+  }
+
+  postorder(callbackFn, root = this.root, list = []) {
+    if (root === null) return root
+
+    this.postorder(callbackFn, root.left, list)
+    this.postorder(callbackFn, root.right, list)
+    callbackFn ? callbackFn(root) : list.push(root.key)
+
+    if (!callbackFn) return list
+  }
+
   prettyPrint(node = this.root, prefix = '', isLeft = true) {
     if (node.right !== null) {
       this.prettyPrint(node.right, `${prefix}${isLeft ? '│   ' : '    '}`, false);
@@ -112,6 +142,9 @@ const tree = new Tree(arr)
 // tree.delete(6345)
 tree.prettyPrint()
 // console.log(tree.find(67))
-console.log("---")
-tree.levelOrder(testFn)
-console.log(tree.levelOrder())
+console.log("--------------------")
+// tree.levelOrder(testFn)
+// console.log(tree.levelOrder())
+// tree.inorder(testFn)
+// tree.preorder(testFn)
+tree.postorder(testFn)
