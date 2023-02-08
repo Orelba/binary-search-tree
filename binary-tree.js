@@ -60,6 +60,34 @@ class Tree {
     return root
   }
 
+  find(key, root = this.root) {
+    if (root === null || root.key === key) return root
+
+    if (root.key < key) return this.find(key, root.right)
+    else if (root.key > key) return this.find(key, root.left)
+  }
+
+  levelOrder(callbackFn, root = this.root) {
+    if (root === null) return root
+
+    let queue = []
+    let currentNode = root
+    let levelOrderList = []
+
+    queue.push(root)
+
+    while (queue.length !== 0) {
+      currentNode = queue.shift()
+
+      callbackFn ? callbackFn(currentNode.key) : levelOrderList.push(currentNode.key)
+
+      if (currentNode.left) queue.push(currentNode.left)
+      if (currentNode.right) queue.push(currentNode.right)
+    }
+
+    if (!callbackFn) return levelOrderList
+  }
+
   prettyPrint(node = this.root, prefix = '', isLeft = true) {
     if (node.right !== null) {
       this.prettyPrint(node.right, `${prefix}${isLeft ? '│   ' : '    '}`, false);
@@ -71,10 +99,19 @@ class Tree {
   }
 }
 
+// Test Zone:
+function testFn(arg) {
+  console.log(arg)
+}
+
 const arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
 const tree = new Tree(arr)
 // tree.prettyPrint()
-tree.insert(2)
+// tree.insert(2)
 // tree.prettyPrint()
-tree.delete(6345)
+// tree.delete(6345)
 tree.prettyPrint()
+// console.log(tree.find(67))
+console.log("---")
+tree.levelOrder(testFn)
+console.log(tree.levelOrder())
