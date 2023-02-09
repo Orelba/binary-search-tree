@@ -2,7 +2,8 @@
 An implementation of a balanced binary search tree (BST) in Javascript.
 
 ## To run the script:
-Run `script.js`.  
+Run `script.js`.
+
 There is already a demonstration of some of the methods in the file,  
 You can use all the methods available below.
 
