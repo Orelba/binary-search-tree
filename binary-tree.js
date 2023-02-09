@@ -4,7 +4,6 @@ class Tree {
   constructor(array) {
     this.sortedArray = [...new Set(array)].sort((a, b) => a - b)
     this.root = this.buildTree(this.sortedArray)
-    console.log(this.sortedArray) // Delete
   }
 
   buildTree(sortedArray) {
@@ -67,6 +66,7 @@ class Tree {
     else if (root.key > key) return this.find(key, root.left)
   }
 
+  // Breadth-first traversal (Level-order)
   levelOrder(callbackFn, root = this.root) {
     if (root === null) return root
 
@@ -88,6 +88,7 @@ class Tree {
     if (!callbackFn) return levelOrderList
   }
 
+  // Depth-first traversal (Inorder, Preorder, Postorder)
   inorder(callbackFn, root = this.root, list = []) {
     if (root === null) return root
 
@@ -118,11 +119,11 @@ class Tree {
     if (!callbackFn) return list
   }
 
-  height(root = this.root) {
-    if (root === null) return 0
+  height(node = this.root) {
+    if (node === null) return 0
 
-    const leftHeight = this.height(root.left)
-    const rightHeight = this.height(root.right)
+    const leftHeight = this.height(node.left)
+    const rightHeight = this.height(node.right)
 
     return Math.max(leftHeight, rightHeight) + 1
   }
@@ -133,6 +134,26 @@ class Tree {
 
     if (root.key < node.key) return this.depth(node, root.right, pathEdgeCount + 1)
     return this.depth(node, root.left, pathEdgeCount + 1)
+  }
+
+  #checkBalance(root = this.root) {
+    if (root === null) return 0
+
+    let leftHeight = this.#checkBalance(root.left)
+    let rightHeight = this.#checkBalance(root.right)
+
+    if (leftHeight === -1 || rightHeight === -1) return -1
+
+    if (Math.abs(leftHeight - rightHeight) > 1) return -1
+    return Math.max(leftHeight, rightHeight) + 1
+  }
+
+  isBalanced() {
+    return this.#checkBalance() !== -1
+  }
+
+  rebalance() {
+    this.root = this.buildTree(this.inorder())
   }
 
   prettyPrint(node = this.root, prefix = '', isLeft = true) {
@@ -146,23 +167,4 @@ class Tree {
   }
 }
 
-// Test Zone:
-function testFn(arg) {
-  console.log(arg)
-}
-
-const tree = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324])
-
-// tree.prettyPrint()
-// tree.insert(2)
-// tree.prettyPrint()
-// tree.delete(6345)
-tree.prettyPrint()
-// console.log(tree.find(67))
-console.log("--------------------")
-// tree.levelOrder(testFn)
-// console.log(tree.levelOrder())
-// tree.inorder(testFn)
-// tree.preorder(testFn)
-// tree.postorder(testFn)
-console.log(tree.depth(tree.find(23)))
+module.exports = Tree
