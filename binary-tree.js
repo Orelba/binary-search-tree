@@ -118,6 +118,23 @@ class Tree {
     if (!callbackFn) return list
   }
 
+  height(root = this.root) {
+    if (root === null) return 0
+
+    const leftHeight = this.height(root.left)
+    const rightHeight = this.height(root.right)
+
+    return Math.max(leftHeight, rightHeight) + 1
+  }
+
+  depth(node, root = this.root, pathEdgeCount = 0) {
+    if (root === null) return root
+    if (root.key === node.key) return pathEdgeCount
+
+    if (root.key < node.key) return this.depth(node, root.right, pathEdgeCount + 1)
+    return this.depth(node, root.left, pathEdgeCount + 1)
+  }
+
   prettyPrint(node = this.root, prefix = '', isLeft = true) {
     if (node.right !== null) {
       this.prettyPrint(node.right, `${prefix}${isLeft ? '│   ' : '    '}`, false);
@@ -134,8 +151,8 @@ function testFn(arg) {
   console.log(arg)
 }
 
-const arr = [1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324]
-const tree = new Tree(arr)
+const tree = new Tree([1, 7, 4, 23, 8, 9, 4, 3, 5, 7, 9, 67, 6345, 324])
+
 // tree.prettyPrint()
 // tree.insert(2)
 // tree.prettyPrint()
@@ -147,4 +164,5 @@ console.log("--------------------")
 // console.log(tree.levelOrder())
 // tree.inorder(testFn)
 // tree.preorder(testFn)
-tree.postorder(testFn)
+// tree.postorder(testFn)
+console.log(tree.depth(tree.find(23)))
